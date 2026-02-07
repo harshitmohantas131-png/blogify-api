@@ -3,4 +3,11 @@ const getAllPosts = (req,res) => {
     message: "Posts fetched successfully"
   });
 };
-module.exports = { getAllPosts};
+const getPostById = async (req,res) => {
+  //Extract postId from URL parameters
+  const postId=req.params.postId;
+  res.status(200).json({
+    message: "Fetching data for post with Id:" + postId
+  });
+};
+module.exports = { getAllPosts, getPostById};

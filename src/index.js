@@ -5,7 +5,7 @@ const app = express();
 const postsRouter = require("./routes/posts.routes");
 
 // Mount Routes
-app.use("/api/v1", postsRouter);
+app.use("/api/v1/posts", postsRouter);
 
 // Start Server
 const PORT = 3000;

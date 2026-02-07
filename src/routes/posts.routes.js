@@ -1,13 +1,9 @@
 const express = require("express");
-
 const router = express.Router();
+const {getAllPosts} = require("../controllers/posts.controller")
 
 // GET /api/v1/posts
-router.get("/posts", (req, res) => {
-  res.status(200).json({
-    message: "Posts fetched successfully",
-  });
-});
+router.get("/posts", getAllPosts);
 
 module.exports = router;
 

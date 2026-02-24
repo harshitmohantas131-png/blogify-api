@@ -1,14 +1,31 @@
+require('dotenv').config();
 const express = require("express");
+const cors = require("cors");
+
 const app = express();
+const PORT = process.env.PORT || 8080;
 
-// Import Routes
-const postsRouter = require("./routes/posts.routes");
+const mainRouter = require('./routes');
 
-// Mount Routes
-app.use("/api/v1/posts", postsRouter);
+//Global Middleware
+app.use(cors());
+app.use(express.json());
+
+//Mount master router
+app.use('/api/v1',mainRouter);
+
+//Error Handling Middleware
+const errorHandler = (err,req,res,next) => {
+   console.error(err.stack);
+
+     res.status(500).json({
+      success:false,
+      error: "Internal Server Error"
+     });
+    };
+app.use(errorHandler);
 
 // Start Server
-const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

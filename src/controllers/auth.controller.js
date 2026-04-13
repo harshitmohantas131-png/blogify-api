@@ -1,6 +1,7 @@
 const User = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { validationResult } = require("express-validator");
 
 // REGISTER
 exports.registerUser = async (req, res) => {
@@ -35,4 +36,36 @@ exports.loginUser = async (req, res) => {
 exports.logoutUser = (req, res) => {
   res.clearCookie("accessToken");
   res.json({ success: true, message: "Logged out" });
+};
+
+
+// 🔐 CHANGE PASSWORD
+exports.changePassword = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { oldPassword, newPassword } = req.body;
+
+    const user = await User.findById(req.user.id);
+
+    // Check old password
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ message: "Old password is incorrect" });
+    }
+
+    // Set new password
+    user.password = newPassword;
+    await user.save(); // triggers hashing
+
+    res.json({ success: true, message: "Password updated successfully" });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };

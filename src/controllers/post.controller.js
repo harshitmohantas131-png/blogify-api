@@ -10,7 +10,7 @@ exports.createPost = async (req, res) => {
   res.status(201).json(post);
 };
 
-// DELETE (SECURE 🔥)
+// DELETE (SECURE)
 exports.deletePost = async (req, res) => {
   const post = await Post.findById(req.params.id);
 
